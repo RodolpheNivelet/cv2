@@ -1,0 +1,24 @@
+{
+  "name": "mycv2.0",
+  "version": "1.0.0",
+  "description": "The second version of my CV",
+  "main": "index.html",
+  "scripts": {
+    "start": "webpack-dev-server --env.dev",
+    "build": "webpack --env.dev",
+    "build:prod": "webpack -p --env.production",
+    "test": "npm test"
+  },
+  "author": "Rodolphe Nivelet <rodolphe.nivelet@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^2.30.1",
+    "webpack": "^3.10.0",
+    "webpack-dev-server": "^2.11.1"
+  },
+  "dependencies": {
+    "stats.js": "^0.17.0",
+    "three": "^0.89.0"
+  }
+}
