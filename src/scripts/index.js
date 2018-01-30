@@ -1,22 +1,28 @@
 'use strict';
 import * as THREE from 'three';
 import * as Stats from 'stats.js';
+import HexagonService from './services/hexagon.js';
+
+import { HEXAGON_RADIUS, HEXAGON_WIDTH, HEXAGON_HEIGHT } from './constants';
 
 export class App {
 
   constructor() {
+    this.raycaster = new THREE.Raycaster();
+    this.mouse = new THREE.Vector2();
     this.init();
     this.animate();
   }
 
   init() {
     const self = this;
-    window.addEventListener('resize', () => {self.onWindowResize();});
+    window.addEventListener('resize', () => {self.onWindowResize();}, false);
+		document.addEventListener('mousemove', event => {self.onDocumentMouseMove(event);}, false );
 
     this.clock = new THREE.Clock();
 
     this.scene = new THREE.Scene();
-    this.scene.fog = new THREE.Fog( 0xFFFFFF, 0, 750 );
+    this.scene.fog = new THREE.Fog( 0xFFFFFF, 150, 300 );
 
     this.renderer = new THREE.WebGLRenderer();
     this.renderer.setClearColor( 0xFFFFFF );
@@ -30,30 +36,42 @@ export class App {
     document.body.appendChild( this.canvas );
 
     this.camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
-    this.camera.position.set(0, 0, 30);
+    this.camera.position.set(0, 0, 80);
 
     this.ambientLight = new THREE.AmbientLight( 0xFFFFFF );
 
     this.scene.add( this.ambientLight );
 
-    let geometry = new THREE.BoxGeometry(10, 10, 10);
-    let material = new THREE.MeshPhongMaterial({
-      color: 0x000000,
-      emissive: 0x444444,
-      wireframe: true
+    HexagonService.appendGrid(100, 15, this.scene);
+
+    this.mixer = new THREE.AnimationMixer( this.scene );
+
+    const middleHex = HexagonService.get(0, 0);
+    HexagonService.animateAllFrom(middleHex, 200, 'Bounce', false, hex => {
+      HexagonService.randomAnimation(hex);
     });
 
-    this.cube = new THREE.Mesh(geometry, material);
+		this.canvas.addEventListener( 'mousedown', event => {self.onClick(event);}, false );
 
-    this.scene.add( this.cube );
   }
 
   animate() {
     const self = this;
-    this.cube.rotation.x += .01;
-    this.cube.rotation.y += .02;
     requestAnimationFrame( () => {self.animate();});
     const delta = this.clock.getDelta();
+
+    this.raycaster.setFromCamera( this.mouse, this.camera );
+
+    const target = HexagonService.targetedHexagon(this.raycaster, this.scene);
+    if (target) {
+    }
+
+    HexagonService.playAnimation(delta);
+
+		this.camera.position.x += ( this.mouse.x * 30 - this.camera.position.x ) * 0.05;
+		this.camera.position.y += ( this.mouse.y * 30 - this.camera.position.y ) * 0.05;
+		this.camera.lookAt( this.scene.position );
+
     this.stats.update();
     this.render();
   }
@@ -75,4 +93,19 @@ export class App {
     this.cameraSize();
     this.camera.updateProjectionMatrix();
   };
+
+  onDocumentMouseMove(event) {
+    this.mouse.x = ( event.clientX / window.innerWidth * 2 ) - 1;
+    this.mouse.y = - ( event.clientY / window.innerHeight * 2 ) + 1;
+  }
+
+  onClick(event) {
+    const target = HexagonService.targetedHexagon(this.raycaster, this.scene);
+    if (target) {
+      HexagonService.animateAllFrom(target, 200, this.flipped ? 'FlipBack': 'Flip', true, hex => {
+        HexagonService.randomAnimation(hex);
+      });
+      this.flipped = !this.flipped;
+    }
+  }
 }

@@ -8,7 +8,7 @@ module.exports = function(env) {
     entry: './index.js',
     output: {
       filename: (env.production ? '[id].[hash]' : '[name]') + '.js',
-      path: path.resolve(__dirname, env.production ? 'dist' : 'dev-dist')
+      path: 'dist')
     },
     module: {
       rules: [
@@ -17,6 +17,12 @@ module.exports = function(env) {
           use: {
             loader: 'html-loader'
           }
+        },
+        {
+          test: /\.(png|svg|jpg|gif)$/,
+          use: [
+            'file-loader'
+          ]
         }
       ]
     },
