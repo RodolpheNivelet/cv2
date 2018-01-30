@@ -47,15 +47,13 @@ export default class {
     const capGeo = HexagonService.capBG;
 
     const sideMaterial = new THREE.MeshPhongMaterial({
-      color: 0xEEEEEE
+      color: 0xDDDDDD
     });
     const faceMaterial = new THREE.MeshPhongMaterial({
-      color: 0x444444,
-      emissive: 0xFFFFFF
+      color: 0x444444
     });
     const backMaterial = new THREE.MeshPhongMaterial({
-      color: 0x444444,
-      emissive: 0xFFFFFF
+      color: 0x444444
     });
 
     let xPos = x * HEXAGON_WIDTH / 2;
@@ -82,7 +80,7 @@ export default class {
 
     const lvalue = (Math.abs(x) + Math.abs(y));
 
-    // this.faceCap.material.color = new THREE.Color().setHSL(0, 0, Math.max(1 - lvalue / 250, 0));
+    this.faceCap.material.color = new THREE.Color().setHSL(0, 0, Math.max(1 - lvalue / 150, 0));
 
     this.animator.add(this.mesh);
     this.container.add(this.animator);

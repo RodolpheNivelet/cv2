@@ -8,7 +8,7 @@ module.exports = function(env) {
     entry: './index.js',
     output: {
       filename: (env.production ? '[id].[hash]' : '[name]') + '.js',
-      path: 'dist'
+      path: __dirname + '/dist'
     },
     module: {
       rules: [
