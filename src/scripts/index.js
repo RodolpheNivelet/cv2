@@ -22,10 +22,10 @@ export class App {
     this.clock = new THREE.Clock();
 
     this.scene = new THREE.Scene();
-    this.scene.fog = new THREE.Fog( 0xFFFFFF, 150, 300 );
+    this.scene.fog = new THREE.Fog( 0xaaaaaa, 150, 300 );
 
     this.renderer = new THREE.WebGLRenderer();
-    this.renderer.setClearColor( 0xFFFFFF );
+    this.renderer.setClearColor( 0xaaaaaa );
     this.renderer.setPixelRatio( window.devicePixelRatio );
     this.renderedSize();
 
@@ -36,15 +36,13 @@ export class App {
     document.body.appendChild( this.canvas );
 
     this.camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
-    this.camera.position.set(0, 0, 80);
+    this.camera.position.set(0, 0, 60);
 
     this.ambientLight = new THREE.AmbientLight( 0xFFFFFF );
 
     this.scene.add( this.ambientLight );
 
     HexagonService.appendGrid(100, 15, this.scene);
-
-    this.mixer = new THREE.AnimationMixer( this.scene );
 
     const middleHex = HexagonService.get(0, 0);
     HexagonService.animateAllFrom(middleHex, 200, 'Bounce', false, hex => {
@@ -102,9 +100,7 @@ export class App {
   onClick(event) {
     const target = HexagonService.targetedHexagon(this.raycaster, this.scene);
     if (target) {
-      HexagonService.animateAllFrom(target, 200, this.flipped ? 'FlipBack': 'Flip', true, hex => {
-        HexagonService.randomAnimation(hex);
-      });
+      HexagonService.animateAllFrom(target, 200, this.flipped ? 'FlipBack': 'Flip', true);
       this.flipped = !this.flipped;
     }
   }

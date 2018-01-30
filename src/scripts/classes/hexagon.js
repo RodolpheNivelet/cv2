@@ -6,6 +6,8 @@ import { HEXAGON_RADIUS, HEXAGON_WIDTH, HEXAGON_HEIGHT } from '../constants';
 export default class {
 
   constructor(x, y, scene) {
+    this.mixers = {};
+    this.clipActions = {};
     this.x = x;
     this.y = y;
 
@@ -45,20 +47,19 @@ export default class {
     const capGeo = HexagonService.capBG;
 
     const sideMaterial = new THREE.MeshPhongMaterial({
-      color: 0x333333,
-      emissive: 0x444444
+      color: 0xEEEEEE
     });
     const faceMaterial = new THREE.MeshPhongMaterial({
-      color: 0x000000,
-      emissive: 0x444444
+      color: 0x444444,
+      emissive: 0xFFFFFF
     });
     const backMaterial = new THREE.MeshPhongMaterial({
-      color: 0x000000,
-      emissive: 0x444444
+      color: 0x444444,
+      emissive: 0xFFFFFF
     });
 
-    let xPos = x * 1.05 * HEXAGON_WIDTH / 2;
-    let yPos = y * 1.05 * HEXAGON_RADIUS * 1.5;
+    let xPos = x * HEXAGON_WIDTH / 2;
+    let yPos = y * HEXAGON_RADIUS * 1.5;
 
     this.cylinder = new THREE.Mesh(cylinderGeo, sideMaterial);
     this.cylinder.name = 'Side';
@@ -81,7 +82,7 @@ export default class {
 
     const lvalue = (Math.abs(x) + Math.abs(y));
 
-    this.faceCap.material.color = new THREE.Color().setHSL(0, 0, lvalue / 100);
+    // this.faceCap.material.color = new THREE.Color().setHSL(0, 0, Math.max(1 - lvalue / 250, 0));
 
     this.animator.add(this.mesh);
     this.container.add(this.animator);
@@ -90,20 +91,22 @@ export default class {
     scene.add( this.container );
   }
 
-  animate(clip, infinite, stayAtLastFrame, afterAnimation) {
-    this.mixer = new THREE.AnimationMixer( this.animator );
-    if (this.clipAction && this.clipAction.isRunning()) {
-      this.clipAction.stop();
+  animate(clip, infinite, stayAtLastFrame, afterAnimation, element = 'animator') {
+    const mixer = this.mixers[element] = new THREE.AnimationMixer( this[element] );
+    let clipAction = this.clipActions[element];
+    if (clipAction && clipAction.isRunning()) {
+      clipAction.stop();
     }
-    this.clipAction = this.mixer.clipAction( clip );
+    clipAction = this.clipActions[element] = mixer.clipAction( clip );
     if (!infinite) {
-      this.clipAction.setLoop(THREE.LoopOnce);
+      clipAction.setLoop(THREE.LoopOnce);
     }
     if (stayAtLastFrame) {
-      this.clipAction.clampWhenFinished = true;
+      clipAction.clampWhenFinished = true;
     }
-    this.clipAction.play();
-    this.mixer.addEventListener('finished', () => {
+    clipAction.play();
+    mixer.addEventListener('finished', () => {
+      delete this.mixers[element];
       if (afterAnimation) {
         afterAnimation(this);
       }

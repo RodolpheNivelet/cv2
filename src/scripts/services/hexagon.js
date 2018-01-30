@@ -7,7 +7,7 @@ class HexagonService {
   constructor() {
     this.hexagons = [];
 
-    this.posKeyframes = new THREE.VectorKeyframeTrack( '.position', [0, 1, 2], [0, 0, 0, 0, 0, 20, 0, 0, 0], THREE.InterpolateSmooth );
+    this.posKeyframes = new THREE.VectorKeyframeTrack( '.position', [0, 1, 2], [0, 0, 0, 0, 0, 14, 0, 0, 0], THREE.InterpolateSmooth );
     const yAxis = new THREE.Vector3( 0, 1, 0 );
     var qInitial = new THREE.Quaternion().setFromAxisAngle( yAxis, 0 );
 		var qMiddle = new THREE.Quaternion().setFromAxisAngle( yAxis, Math.PI / 2 );
@@ -101,7 +101,7 @@ class HexagonService {
       [0, 0, 0, 0, 0, whereTo, 0, 0, 0],
       THREE.InterpolateSmooth );
     const posClip = new THREE.AnimationClip('Random', duration, [posKeyframes] );
-    hex.animate(posClip, true);
+    hex.animate(posClip, true, null, null, 'mesh');
   }
 
   animateAllFrom(hex, speed = 200, clipName, stayAtLastFrame, afterAnimation) {
@@ -134,8 +134,13 @@ class HexagonService {
   playAnimation(delta) {
     if (this.hexagons) {
       for (const hex of this.hexagons) {
-        if (hex.mixer) {
-          hex.mixer.update(delta);
+        if (hex.mixers) {
+          for (var x in hex.mixers) {
+            if (hex.mixers.hasOwnProperty(x)) {
+              const mixer = hex.mixers[x];
+              mixer.update(delta);
+            }
+          }
         }
       }
     }
@@ -156,8 +161,25 @@ class HexagonService {
         self.get(0, 2).faceCap.material = new THREE.MeshPhongMaterial({
           color: 0xFFFFFF,
           emissive: 0x000000,
-          map: texture
+          map: texture,
+          bumpMap: texture
         });
+
+        // self.get(-4, 0).faceCap.material = new THREE.MeshPhongMaterial({
+        //   color: 0xEF2e57
+        // });
+        //
+        // self.get(-2, 0).faceCap.material = new THREE.MeshPhongMaterial({
+        //   color: 0x2fedc9
+        // });
+        //
+        // self.get(2, 0).faceCap.material = new THREE.MeshPhongMaterial({
+        //   color: 0x2f1ce4
+        // });
+        //
+        // self.get(4, 0).faceCap.material = new THREE.MeshPhongMaterial({
+        //   color: 0x1dfc9f
+        // });
     	},
 
     	// onProgress callback currently not supported
