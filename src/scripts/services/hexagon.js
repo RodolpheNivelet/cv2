@@ -2,6 +2,9 @@ import * as THREE from 'three';
 import Hexagon from '../classes/hexagon.js';
 import { HEXAGON_RADIUS } from '../constants';
 
+import { faBriefcase, faChess, faChild, faRoad } from '@fortawesome/fontawesome-pro-light';
+
+
 class HexagonService {
 
   constructor() {
@@ -101,7 +104,7 @@ class HexagonService {
       [0, 0, 0, 0, 0, whereTo, 0, 0, 0],
       THREE.InterpolateSmooth );
     const posClip = new THREE.AnimationClip('Random', duration, [posKeyframes] );
-    hex.animate(posClip, true, null, null, 'mesh');
+    hex.animate(posClip, true, null, null, 'wrapper');
   }
 
   animateAllFrom(hex, speed = 200, clipName, stayAtLastFrame, afterAnimation) {
@@ -141,6 +144,7 @@ class HexagonService {
               mixer.update(delta);
             }
           }
+          hex.trailingAnimation(delta);
         }
       }
     }
@@ -165,21 +169,34 @@ class HexagonService {
           bumpMap: texture
         });
 
-        // self.get(-4, 0).faceCap.material = new THREE.MeshPhongMaterial({
-        //   color: 0xEF2e57
-        // });
-        //
-        // self.get(-2, 0).faceCap.material = new THREE.MeshPhongMaterial({
-        //   color: 0x2fedc9
-        // });
-        //
-        // self.get(2, 0).faceCap.material = new THREE.MeshPhongMaterial({
-        //   color: 0x2f1ce4
-        // });
-        //
-        // self.get(4, 0).faceCap.material = new THREE.MeshPhongMaterial({
-        //   color: 0x1dfc9f
-        // });
+        const one = self.get(-4, 0);
+
+        one.faceCap.material = new THREE.MeshPhongMaterial({
+          color: new THREE.Color(119 / 255, 250 / 255, 226 / 255)
+        });
+        one.clickable = true;
+        one.addIcon(faChild);
+
+        const two = self.get(-2, 0);
+        two.faceCap.material = new THREE.MeshPhongMaterial({
+          color: new THREE.Color(39 / 255, 38 / 255, 87 / 255)
+        });
+        two.clickable = true;
+        two.addIcon(faChess);
+
+        const three = self.get(2, 0);
+        three.faceCap.material = new THREE.MeshPhongMaterial({
+          color: new THREE.Color(95 / 255, 45 / 255, 124 / 255)
+        });
+        three.clickable = true;
+        three.addIcon(faBriefcase);
+
+        const fourth = self.get(4, 0);
+        fourth.faceCap.material = new THREE.MeshPhongMaterial({
+          color: new THREE.Color(45 / 255, 96 / 255, 121 / 255)
+        });
+        fourth.clickable = true;
+        fourth.addIcon(faRoad);
     	},
 
     	// onProgress callback currently not supported

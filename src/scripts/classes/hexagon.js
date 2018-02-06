@@ -3,6 +3,11 @@ import * as THREE from 'three';
 import HexagonService from '../services/hexagon';
 import { HEXAGON_RADIUS, HEXAGON_WIDTH, HEXAGON_HEIGHT } from '../constants';
 
+
+import * as svgMesh3d from 'svg-mesh-3d';
+import * as simplicialComplex from 'three-simplicial-complex';
+const createGeomFrom3dMesh = simplicialComplex(THREE);
+
 export default class {
 
   constructor(x, y, scene) {
@@ -56,8 +61,8 @@ export default class {
       color: 0x444444
     });
 
-    let xPos = x * HEXAGON_WIDTH / 2;
-    let yPos = y * HEXAGON_RADIUS * 1.5;
+    let xPos = x * HEXAGON_WIDTH * 1.012 / 2;
+    let yPos = y * HEXAGON_RADIUS * 1.012 * 1.5;
 
     this.cylinder = new THREE.Mesh(cylinderGeo, sideMaterial);
     this.cylinder.name = 'Side';
@@ -76,13 +81,15 @@ export default class {
 
     this.container = new THREE.Object3D();
     this.animator = new THREE.Object3D();
+    this.wrapper = new THREE.Object3D();
     this.container.position.set( xPos, yPos, 0 );
 
     const lvalue = (Math.abs(x) + Math.abs(y));
 
     this.faceCap.material.color = new THREE.Color().setHSL(0, 0, Math.max(1 - lvalue / 150, 0));
 
-    this.animator.add(this.mesh);
+    this.wrapper.add(this.mesh);
+    this.animator.add(this.wrapper);
     this.container.add(this.animator);
     this.mesh.class = this;
 
@@ -109,6 +116,35 @@ export default class {
         afterAnimation(this);
       }
     });
+  }
+
+  addIcon(svg) {
+    const mesh = svgMesh3d(svg.icon[4]);
+
+    const geometry = createGeomFrom3dMesh(mesh);
+
+    const material = new THREE.MeshBasicMaterial({
+      side: THREE.DoubleSide,
+      color: 0xFFFFFF
+    });
+
+    const threeMesh = new THREE.Mesh(geometry, material);
+
+    threeMesh.position.z = 1;
+    threeMesh.scale.set(3, 3, 3);
+
+    this.icon = threeMesh;
+
+    this.wrapper.add(threeMesh);
+  }
+
+  trailingAnimation(delta) {
+    if (this.icon) {
+      let iconPosition = this.icon.position.z;
+      let toPosition = this.hover ? 6 : 2;
+
+      this.icon.position.z += (toPosition - iconPosition) * delta * 3;
+    }
   }
 
 }
