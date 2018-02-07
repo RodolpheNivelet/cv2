@@ -176,6 +176,7 @@ class HexagonService {
         });
         one.clickable = true;
         one.addIcon(faChild);
+        one.addText('About Me');
 
         const two = self.get(-2, 0);
         two.faceCap.material = new THREE.MeshPhongMaterial({

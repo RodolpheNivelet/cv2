@@ -1,6 +1,7 @@
 'use strict';
 import * as THREE from 'three';
 import HexagonService from '../services/hexagon';
+import TransitionService from '../services/transition';
 import { HEXAGON_RADIUS, HEXAGON_WIDTH, HEXAGON_HEIGHT } from '../constants';
 
 
@@ -138,12 +139,43 @@ export default class {
     this.wrapper.add(threeMesh);
   }
 
+  addText(text) {
+
+    const canvas = document.createElement('canvas');
+    canvas.height = 256;
+    canvas.width = 256;
+    const canvasctx = canvas.getContext( '2d' );
+
+    canvasctx.font = '30px Arial';
+    canvasctx.textAlign = 'center';
+    canvasctx.textBaseline = 'middle';
+    canvasctx.fillText(text, canvas.width/2, canvas.height/2);
+
+    const texture = new THREE.Texture(canvas);
+    const geometry = new THREE.PlaneGeometry(10, 10);
+    const material = new THREE.MeshBasicMaterial({
+      side: THREE.DoubleSide,
+      transparent: true,
+      map: texture
+    });
+		material.map.needsUpdate = true;
+    this.text = new THREE.Mesh(geometry, material);
+
+    this.wrapper.add(this.text);
+
+  }
+
   trailingAnimation(delta) {
     if (this.icon) {
-      let iconPosition = this.icon.position.z;
-      let toPosition = this.hover ? 6 : 2;
-
-      this.icon.position.z += (toPosition - iconPosition) * delta * 3;
+      const vector = new THREE.Vector3(0, 0, this.hover ? 6 : 2);
+      TransitionService.smoothTo(this.icon, 'position', vector, delta);
+    }
+    if (this.text) {
+      const vector = new THREE.Vector3(0, this.hover ? -3 : 0, this.hover ? 6 : 0);
+      TransitionService.smoothTo(this.text, 'position', vector, delta);
+      const scaleVal = this.hover ? 2 : 1;
+      const scale = new THREE.Vector3(scaleVal, scaleVal, scaleVal);
+      TransitionService.smoothTo(this.text, 'scale', scale, delta);
     }
   }
 
