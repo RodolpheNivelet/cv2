@@ -149,12 +149,15 @@ export default class {
     canvasctx.font = '30px Arial';
     canvasctx.textAlign = 'center';
     canvasctx.textBaseline = 'middle';
+    canvasctx.fillStyle = '#FFF';
     canvasctx.fillText(text, canvas.width/2, canvas.height/2);
+    canvasctx.lineWidth = 1;
+    canvasctx.strokeStyle = '#DDD';
+    canvasctx.strokeText(text, canvas.width/2, canvas.height/2);
 
     const texture = new THREE.Texture(canvas);
     const geometry = new THREE.PlaneGeometry(10, 10);
     const material = new THREE.MeshBasicMaterial({
-      side: THREE.DoubleSide,
       transparent: true,
       map: texture
     });
@@ -167,13 +170,13 @@ export default class {
 
   trailingAnimation(delta) {
     if (this.icon) {
-      const vector = new THREE.Vector3(0, 0, this.hover ? 6 : 2);
+      const vector = new THREE.Vector3(0, 0, this.hover ? 4 : 1.6);
       TransitionService.smoothTo(this.icon, 'position', vector, delta);
     }
     if (this.text) {
-      const vector = new THREE.Vector3(0, this.hover ? -3 : 0, this.hover ? 6 : 0);
+      const vector = new THREE.Vector3(0, this.hover ? -6 : -4, this.hover ? 4 : 1);
       TransitionService.smoothTo(this.text, 'position', vector, delta);
-      const scaleVal = this.hover ? 2 : 1;
+      const scaleVal = this.hover ? 2 : 0;
       const scale = new THREE.Vector3(scaleVal, scaleVal, scaleVal);
       TransitionService.smoothTo(this.text, 'scale', scale, delta);
     }

@@ -184,6 +184,7 @@ class HexagonService {
         });
         two.clickable = true;
         two.addIcon(faChess);
+        two.addText('Skills');
 
         const three = self.get(2, 0);
         three.faceCap.material = new THREE.MeshPhongMaterial({
@@ -191,6 +192,7 @@ class HexagonService {
         });
         three.clickable = true;
         three.addIcon(faBriefcase);
+        three.addText('Portfolio');
 
         const fourth = self.get(4, 0);
         fourth.faceCap.material = new THREE.MeshPhongMaterial({
@@ -198,6 +200,7 @@ class HexagonService {
         });
         fourth.clickable = true;
         fourth.addIcon(faRoad);
+        fourth.addText('Experiences');
     	},
 
     	// onProgress callback currently not supported
