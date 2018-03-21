@@ -68,8 +68,11 @@ export class App {
     }
     for (var i = 0; i < HexagonService.hexagons.length; i++) {
       const hexagon = HexagonService.hexagons[i]
-      if (hexagon !== target) {
-        hexagon.hover = false;
+      if (hexagon.faceCap !== target) {
+        hexagon.faceCap.hover = false;
+      }
+      if (hexagon.backCap !== target) {
+        hexagon.backCap.hover = false;
       }
     }
 
@@ -99,7 +102,7 @@ export class App {
     this.renderedSize();
     this.cameraSize();
     this.camera.updateProjectionMatrix();
-  };
+  }
 
   onDocumentMouseMove(event) {
     this.mouse.x = ( event.clientX / window.innerWidth * 2 ) - 1;
@@ -109,8 +112,7 @@ export class App {
   onClick(event) {
     const target = HexagonService.targetedHexagon(this.raycaster, this.scene);
     if (target) {
-      HexagonService.animateAllFrom(target, 200, this.flipped ? 'FlipBack': 'Flip', true);
-      this.flipped = !this.flipped;
+      HexagonService.clicked(target);
     }
   }
 }

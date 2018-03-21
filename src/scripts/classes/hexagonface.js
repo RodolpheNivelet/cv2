@@ -1,0 +1,86 @@
+'use strict';
+import * as THREE from 'three';
+import HexagonService from '../services/hexagon';
+import TransitionService from '../services/transition';
+import { HEXAGON_RADIUS, HEXAGON_WIDTH, HEXAGON_HEIGHT } from '../constants';
+
+import * as svgMesh3d from 'svg-mesh-3d';
+import * as simplicialComplex from 'three-simplicial-complex';
+const createGeomFrom3dMesh = simplicialComplex(THREE);
+
+export default class {
+
+  constructor(geo, material, depth, side, parent) {
+    this.wrapper = new THREE.Object3D();
+    this.mesh = new THREE.Mesh(geo, material);
+    this.mesh.name = side;
+    this.wrapper.position.z = (side === 'Face' ? depth : -depth) / 2;
+    this.mesh.rotation.x = Math.PI * (side === 'Face' ? -1 : 1) / 2;
+    this.mesh.face = this;
+    this.wrapper.add(this.mesh);
+    this.hexagon = parent;
+  }
+
+  addIcon(svg) {
+    const mesh = svgMesh3d(svg.icon[4]);
+
+    const geometry = createGeomFrom3dMesh(mesh);
+
+    const material = new THREE.MeshBasicMaterial({
+      side: THREE.DoubleSide,
+      color: 0xFFFFFF
+    });
+
+    const threeMesh = new THREE.Mesh(geometry, material);
+
+    threeMesh.position.z = 1;
+    threeMesh.scale.set(3, 3, 3);
+
+    this.icon = threeMesh;
+
+    this.wrapper.add(threeMesh);
+  }
+
+  addText(text) {
+
+    const canvas = document.createElement('canvas');
+    canvas.height = 256;
+    canvas.width = 256;
+    const canvasctx = canvas.getContext( '2d' );
+
+    canvasctx.font = '30px Arial';
+    canvasctx.textAlign = 'center';
+    canvasctx.textBaseline = 'middle';
+    canvasctx.fillStyle = '#FFF';
+    canvasctx.fillText(text, canvas.width/2, canvas.height/2);
+    canvasctx.lineWidth = 1;
+    canvasctx.strokeStyle = '#DDD';
+    canvasctx.strokeText(text, canvas.width/2, canvas.height/2);
+
+    const texture = new THREE.Texture(canvas);
+    const geometry = new THREE.PlaneGeometry(10, 10);
+    const material = new THREE.MeshBasicMaterial({
+      transparent: true,
+      map: texture
+    });
+		material.map.needsUpdate = true;
+    this.text = new THREE.Mesh(geometry, material);
+
+    this.wrapper.add(this.text);
+
+  }
+
+  trailingAnimation(delta) {
+    if (this.icon) {
+      const vector = new THREE.Vector3(0, 0, this.hover ? 4 : 1.6);
+      TransitionService.smoothTo(this.icon, 'position', vector, delta);
+    }
+    if (this.text) {
+      const vector = new THREE.Vector3(0, this.hover ? -6 : -4, this.hover ? 4 : 1);
+      TransitionService.smoothTo(this.text, 'position', vector, delta);
+      const scaleVal = this.hover ? 2 : 0;
+      const scale = new THREE.Vector3(scaleVal, scaleVal, scaleVal);
+      TransitionService.smoothTo(this.text, 'scale', scale, delta);
+    }
+  }
+}
