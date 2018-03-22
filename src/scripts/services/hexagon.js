@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import Hexagon from '../classes/hexagon.js';
+import Hexagon from '../classes/hexagon';
+import PageService from './pages';
 import { HEXAGON_RADIUS } from '../constants';
 
 import { faBriefcase, faChess, faChild, faRoad } from '@fortawesome/fontawesome-pro-light';
@@ -164,6 +165,20 @@ class HexagonService {
 
   changePage(target) {
     this.currentPage = target.link;
+
+    if (target.link === 'skills') {
+      this.get(0, 0).backCap.addText('Angular', true);
+      this.get(0, 0).backCap.addImage(require('../../assets/icons/angular-icon.png'));
+
+      this.get(-2, 0).backCap.addText('Javascript', true);
+      this.get(-2, 0).backCap.addImage(require('../../assets/icons/javascript.png'));
+
+      this.get(2, 0).backCap.addText('NodeJs', true);
+      this.get(2, 0).backCap.addImage(require('../../assets/icons/nodejs.png'));
+    }
+
+    // TODO
+    // PageService.loadPage(target.link);
 
     this.animateAllFrom(target.hexagon, 200, this.flipped ? 'FlipBack': 'Flip', true);
     this.flipped = !this.flipped;

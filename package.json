@@ -12,6 +12,7 @@
   "author": "Rodolphe Nivelet <rodolphe.nivelet@gmail.com>",
   "license": "ISC",
   "devDependencies": {
+    "copy-webpack-plugin": "^4.5.1",
     "file-loader": "^1.1.6",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^2.30.1",

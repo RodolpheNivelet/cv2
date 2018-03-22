@@ -14,11 +14,46 @@ export default class {
     this.wrapper = new THREE.Object3D();
     this.mesh = new THREE.Mesh(geo, material);
     this.mesh.name = side;
-    this.wrapper.position.z = (side === 'Face' ? depth : -depth) / 2;
-    this.mesh.rotation.x = Math.PI * (side === 'Face' ? -1 : 1) / 2;
+    this.mesh.position.z = depth / 2;
+    this.mesh.rotation.x = -Math.PI / 2;
+    if (side === 'Back') {
+      this.wrapper.rotation.y = Math.PI
+    }
     this.mesh.face = this;
     this.wrapper.add(this.mesh);
     this.hexagon = parent;
+  }
+
+  addImage(imagePath) {
+    const loader = new THREE.TextureLoader();
+
+    const self = this;
+
+    return new Promise(function(resolve, reject) {
+      loader.load(
+
+        imagePath,
+
+        texture => {
+          const geometry = new THREE.PlaneGeometry(8, 8);
+          const material = new THREE.MeshBasicMaterial({
+            transparent: true,
+            map: texture
+          });
+          self.icon = new THREE.Mesh(geometry, material);
+          self.wrapper.add(self.icon);
+          resolve(texture);
+        },
+        progress => {
+
+        },
+        error => {
+          console.error('Error on loading texture');
+          reject('Error');
+        }
+      );
+    });
+
   }
 
   addIcon(svg) {
@@ -41,20 +76,24 @@ export default class {
     this.wrapper.add(threeMesh);
   }
 
-  addText(text) {
+  addText(text, black) {
 
     const canvas = document.createElement('canvas');
-    canvas.height = 256;
-    canvas.width = 256;
+    canvas.height = 512;
+    canvas.width = 512;
     const canvasctx = canvas.getContext( '2d' );
 
-    canvasctx.font = '30px Arial';
+    canvasctx.font = '50px Arial';
     canvasctx.textAlign = 'center';
     canvasctx.textBaseline = 'middle';
-    canvasctx.fillStyle = '#FFF';
+    if (black) {
+      canvasctx.fillStyle = '#444';
+    } else {
+      canvasctx.fillStyle = '#FFF';
+      canvasctx.lineWidth = 2;
+      canvasctx.strokeStyle = '#DDD';
+    }
     canvasctx.fillText(text, canvas.width/2, canvas.height/2);
-    canvasctx.lineWidth = 1;
-    canvasctx.strokeStyle = '#DDD';
     canvasctx.strokeText(text, canvas.width/2, canvas.height/2);
 
     const texture = new THREE.Texture(canvas);
@@ -72,7 +111,7 @@ export default class {
 
   trailingAnimation(delta) {
     if (this.icon) {
-      const vector = new THREE.Vector3(0, 0, this.hover ? 4 : 1.6);
+      const vector = new THREE.Vector3(0, 0, this.hover ? 4.2 : 2);
       TransitionService.smoothTo(this.icon, 'position', vector, delta);
     }
     if (this.text) {

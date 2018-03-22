@@ -56,7 +56,7 @@ export default class {
       color: 0xDDDDDD
     });
     const material = new THREE.MeshPhongMaterial({
-      color: 0x444444
+      color: 0xF5F5F5
     });
 
     let xPos = x * HEXAGON_WIDTH * 1.012 / 2;
