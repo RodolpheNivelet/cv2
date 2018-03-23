@@ -3,7 +3,7 @@ import Hexagon from '../classes/hexagon';
 import PageService from './pages';
 import { HEXAGON_RADIUS } from '../constants';
 
-import { faBriefcase, faChess, faChild, faRoad } from '@fortawesome/fontawesome-pro-light';
+import { faBriefcase, faChess, faChild, faRoad, faArrowAltLeft } from '@fortawesome/fontawesome-pro-light';
 
 
 class HexagonService {
@@ -166,19 +166,9 @@ class HexagonService {
   changePage(target) {
     this.currentPage = target.link;
 
-    if (target.link === 'skills') {
-      this.get(0, 0).backCap.addText('Angular', true);
-      this.get(0, 0).backCap.addImage(require('../../assets/icons/angular-icon.png'));
-
-      this.get(-2, 0).backCap.addText('Javascript', true);
-      this.get(-2, 0).backCap.addImage(require('../../assets/icons/javascript.png'));
-
-      this.get(2, 0).backCap.addText('NodeJs', true);
-      this.get(2, 0).backCap.addImage(require('../../assets/icons/nodejs.png'));
+    if (target.link !== 'home') {
+      PageService.loadPage(target.link);
     }
-
-    // TODO
-    // PageService.loadPage(target.link);
 
     this.animateAllFrom(target.hexagon, 200, this.flipped ? 'FlipBack': 'Flip', true);
     this.flipped = !this.flipped;
@@ -191,7 +181,7 @@ class HexagonService {
 
     loader.load(
     	// resource URL
-    	require('../../assets/me.jpg'),
+    	'/assets/me.jpg',
 
     	// onLoad callback
       texture => {
@@ -235,6 +225,15 @@ class HexagonService {
         fourth.faceCap.clickable = true;
         fourth.faceCap.addIcon(faRoad);
         fourth.faceCap.addText('Experiences');
+
+        const previous = self.get(-6, 0);
+        previous.backCap.mesh.material = new THREE.MeshPhongMaterial({
+          color: new THREE.Color(95 / 255, 45 / 255, 124 / 255)
+        });
+        previous.backCap.clickable = true;
+        previous.backCap.link = 'home';
+        previous.backCap.addIcon(faArrowAltLeft);
+        previous.backCap.addText('Back to home');
     	},
 
     	// onProgress callback currently not supported

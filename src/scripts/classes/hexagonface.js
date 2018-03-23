@@ -79,7 +79,7 @@ export default class {
   addText(text, black) {
 
     const canvas = document.createElement('canvas');
-    canvas.height = 512;
+    canvas.height = 128;
     canvas.width = 512;
     const canvasctx = canvas.getContext( '2d' );
 
@@ -97,7 +97,7 @@ export default class {
     canvasctx.strokeText(text, canvas.width/2, canvas.height/2);
 
     const texture = new THREE.Texture(canvas);
-    const geometry = new THREE.PlaneGeometry(10, 10);
+    const geometry = new THREE.PlaneGeometry(10, 2.5);
     const material = new THREE.MeshBasicMaterial({
       transparent: true,
       map: texture

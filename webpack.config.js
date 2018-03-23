@@ -31,7 +31,10 @@ module.exports = function(env) {
       new HtmlWebpackPlugin({
         template: './index.html'
       }),
-      new CopyWebpackPlugin([{from: './pages', to: 'pages'}])
+      new CopyWebpackPlugin([
+        {from: './pages', to: 'pages'},
+        {from: './assets', to: 'assets'}
+      ])
     ]
   };
 

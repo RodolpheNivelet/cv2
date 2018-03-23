@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import HexagonService from './hexagon';
 
 class PageService {
 
@@ -11,9 +12,14 @@ class PageService {
       	// resource URL
       	`/pages/${page}.json`,
       	// onLoad callback
-      	data => {
-      		// output the text to the console
-      		console.log( data )
+      	text => {
+          const data = JSON.parse(text);
+          for (var i = 0; i < data.length; i++) {
+            const entry = data[i];
+            const hexagon = HexagonService.get(entry.x, entry.y);
+            hexagon.backCap.addText(entry.text, true);
+            hexagon.backCap.addImage(`/assets/icons/${entry.image}.png`);
+          }
       	},
 
       	// onProgress callback
