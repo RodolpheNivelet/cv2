@@ -2,9 +2,7 @@ language: node_js
 branches:
   only:
     - master
-install:
-  - npm config set @fortawesome:registry https://npm.fontawesome.com/$FONTAWESOME_TOKEN
-  - npm install
+before_install: npm config set @fortawesome:registry https://npm.fontawesome.com/$FONTAWESOME_TOKEN
 script: npm run build:prod
 deploy:
   provider: pages
