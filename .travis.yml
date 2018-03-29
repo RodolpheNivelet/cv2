@@ -9,6 +9,6 @@ deploy:
   skip-cleanup: true
   github-token: $GITHUB_TOKEN
   keep-history: true
-  repo: rodolphenivelet.github.io
+  repo: RodolpheNivelet/rodolphenivelet.github.io
   local-dir: dist
   target-branch: master
