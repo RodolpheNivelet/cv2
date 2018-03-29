@@ -3,10 +3,8 @@ node_js: node
 branches:
   only:
     - master
-before_install:
-  - npm config set @fortawesome:registry https://npm.fontawesome.com/$FONTAWESOME_TOKEN
-  - rm package-lock.json
-script: npm run build:prod
+before_install: npm config set @fortawesome:registry https://npm.fontawesome.com/$FONTAWESOME_TOKEN
+script: npm run build
 deploy:
   provider: pages
   skip-cleanup: true
