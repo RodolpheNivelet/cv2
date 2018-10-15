@@ -170,7 +170,9 @@ class HexagonService {
       PageService.loadPage(target.link);
     }
 
-    this.animateAllFrom(target.hexagon, 200, this.flipped ? 'FlipBack': 'Flip', true);
+    const afterAnim = target.link === 'home' ? hex => {hex.cleanBack()} : undefined;
+
+    this.animateAllFrom(target.hexagon, 200, this.flipped ? 'FlipBack': 'Flip', true, afterAnim);
     this.flipped = !this.flipped;
   }
 
@@ -234,6 +236,7 @@ class HexagonService {
         previous.backCap.link = 'home';
         previous.backCap.addIcon(faArrowAltLeft);
         previous.backCap.addText('Back to home');
+        previous.noBackClean = true;
     	},
 
     	// onProgress callback currently not supported
@@ -244,6 +247,12 @@ class HexagonService {
     		console.error( 'An error happened.' );
     	}
     );
+  }
+
+  cleanAllBack() {
+    for (let hexagon of this.hexagons) {
+      hexagon.cleanBack();
+    }
   }
 
 }

@@ -114,4 +114,10 @@ export default class {
     });
   }
 
+  cleanBack() {
+    if (!this.noBackClean) {
+      this.backCap.clean();
+    }
+  }
+
 }

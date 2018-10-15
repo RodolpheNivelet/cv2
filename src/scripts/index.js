@@ -46,11 +46,14 @@ export class App {
     HexagonService.appendGrid(100, 15, this.scene);
 
     const middleHex = HexagonService.get(0, 0);
-    HexagonService.animateAllFrom(middleHex, 200, 'Bounce', false, hex => {
-      HexagonService.randomAnimation(hex);
-    });
 
     this.canvas.addEventListener( 'mousedown', event => {self.onClick(event);}, false );
+
+    setTimeout(() => {
+      HexagonService.animateAllFrom(middleHex, 200, 'Bounce', false, hex => {
+        HexagonService.randomAnimation(hex);
+      });
+    }, 1000);
 
   }
 

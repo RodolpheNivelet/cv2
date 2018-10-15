@@ -122,4 +122,16 @@ export default class {
       TransitionService.smoothTo(this.text, 'scale', scale, delta);
     }
   }
+
+  clean() {
+    if (this.icon) {
+      this.wrapper.remove(this.icon);
+      delete this.icon;
+    }
+
+    if (this.text) {
+      this.wrapper.remove(this.text);
+      delete this.text;
+    }
+  }
 }
