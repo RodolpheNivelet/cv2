@@ -43,7 +43,7 @@ export class App {
 
     this.scene.add( this.ambientLight );
 
-    HexagonService.appendGrid(100, 15, this.scene);
+    HexagonService.appendGrid(30, 10, this.scene);
 
     const middleHex = HexagonService.get(0, 0);
 
