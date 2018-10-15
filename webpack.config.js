@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = function(env) {
 
@@ -29,7 +30,11 @@ module.exports = function(env) {
     plugins: [
       new HtmlWebpackPlugin({
         template: './index.html'
-      })
+      }),
+      new CopyWebpackPlugin([
+        {from: './pages', to: 'pages'},
+        {from: './assets', to: 'assets'}
+      ])
     ]
   };
 

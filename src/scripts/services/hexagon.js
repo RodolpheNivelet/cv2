@@ -1,10 +1,17 @@
 import * as THREE from 'three';
-import Hexagon from '../classes/hexagon.js';
+import Hexagon from '../classes/hexagon';
+import PageService from './pages';
 import { HEXAGON_RADIUS } from '../constants';
+
+import { faBriefcase, faChess, faChild, faRoad, faArrowAltLeft } from '@fortawesome/fontawesome-pro-light';
+
 
 class HexagonService {
 
   constructor() {
+
+    this.currentPage = 'home';
+
     this.hexagons = [];
 
     this.posKeyframes = new THREE.VectorKeyframeTrack( '.position', [0, 1, 2], [0, 0, 0, 0, 0, 14, 0, 0, 0], THREE.InterpolateSmooth );
@@ -54,8 +61,8 @@ class HexagonService {
       const intersect = intersects[i];
       if (intersect && intersect.object instanceof THREE.Mesh) {
         const name = intersect.object.name;
-        if (name === 'Face' || name === 'Back' || name === 'Side') {
-          return intersect.object.parent.class;
+        if (name === 'Face' || name === 'Back') {
+          return intersect.object.face;
         }
       }
     }
@@ -101,7 +108,7 @@ class HexagonService {
       [0, 0, 0, 0, 0, whereTo, 0, 0, 0],
       THREE.InterpolateSmooth );
     const posClip = new THREE.AnimationClip('Random', duration, [posKeyframes] );
-    hex.animate(posClip, true, null, null, 'mesh');
+    hex.animate(posClip, true, null, null, 'wrapper');
   }
 
   animateAllFrom(hex, speed = 200, clipName, stayAtLastFrame, afterAnimation) {
@@ -141,9 +148,30 @@ class HexagonService {
               mixer.update(delta);
             }
           }
+          if (hex.x < 10 && hex.y < 10) {
+            hex.faceCap.trailingAnimation(delta);
+            hex.backCap.trailingAnimation(delta);
+          }
         }
       }
     }
+  }
+
+  clicked(target) {
+    if (target.link) {
+      this.changePage(target);
+    }
+  }
+
+  changePage(target) {
+    this.currentPage = target.link;
+
+    if (target.link !== 'home') {
+      PageService.loadPage(target.link);
+    }
+
+    this.animateAllFrom(target.hexagon, 200, this.flipped ? 'FlipBack': 'Flip', true);
+    this.flipped = !this.flipped;
   }
 
   textureBlocks() {
@@ -153,33 +181,59 @@ class HexagonService {
 
     loader.load(
     	// resource URL
-    	require('../../assets/me.jpg'),
+    	'/assets/me.jpg',
 
     	// onLoad callback
       texture => {
-        texture.rotation
-        self.get(0, 2).faceCap.material = new THREE.MeshPhongMaterial({
+        self.get(0, 2).faceCap.mesh.material = new THREE.MeshPhongMaterial({
           color: 0xFFFFFF,
           emissive: 0x000000,
           map: texture,
           bumpMap: texture
         });
 
-        // self.get(-4, 0).faceCap.material = new THREE.MeshPhongMaterial({
-        //   color: 0xEF2e57
-        // });
-        //
-        // self.get(-2, 0).faceCap.material = new THREE.MeshPhongMaterial({
-        //   color: 0x2fedc9
-        // });
-        //
-        // self.get(2, 0).faceCap.material = new THREE.MeshPhongMaterial({
-        //   color: 0x2f1ce4
-        // });
-        //
-        // self.get(4, 0).faceCap.material = new THREE.MeshPhongMaterial({
-        //   color: 0x1dfc9f
-        // });
+        const one = self.get(-4, 0);
+
+        one.faceCap.mesh.material = new THREE.MeshPhongMaterial({
+          color: new THREE.Color(119 / 255, 250 / 255, 226 / 255)
+        });
+        one.faceCap.clickable = true;
+        one.faceCap.addIcon(faChild);
+        one.faceCap.addText('About Me');
+
+        const two = self.get(-2, 0);
+        two.faceCap.mesh.material = new THREE.MeshPhongMaterial({
+          color: new THREE.Color(39 / 255, 38 / 255, 87 / 255)
+        });
+        two.faceCap.clickable = true;
+        two.faceCap.link = 'skills';
+        two.faceCap.addIcon(faChess);
+        two.faceCap.addText('Skills');
+
+        const three = self.get(2, 0);
+        three.faceCap.mesh.material = new THREE.MeshPhongMaterial({
+          color: new THREE.Color(95 / 255, 45 / 255, 124 / 255)
+        });
+        three.faceCap.clickable = true;
+        three.faceCap.addIcon(faBriefcase);
+        three.faceCap.addText('Portfolio');
+
+        const fourth = self.get(4, 0);
+        fourth.faceCap.mesh.material = new THREE.MeshPhongMaterial({
+          color: new THREE.Color(45 / 255, 96 / 255, 121 / 255)
+        });
+        fourth.faceCap.clickable = true;
+        fourth.faceCap.addIcon(faRoad);
+        fourth.faceCap.addText('Experiences');
+
+        const previous = self.get(-6, 0);
+        previous.backCap.mesh.material = new THREE.MeshPhongMaterial({
+          color: new THREE.Color(95 / 255, 45 / 255, 124 / 255)
+        });
+        previous.backCap.clickable = true;
+        previous.backCap.link = 'home';
+        previous.backCap.addIcon(faArrowAltLeft);
+        previous.backCap.addText('Back to home');
     	},
 
     	// onProgress callback currently not supported

@@ -1,0 +1,176 @@
+[
+  {
+    "x": 0,
+    "y": 0,
+    "text": "Javascript",
+    "image": "javascript"
+  },
+  {
+    "x": -2,
+    "y": 0,
+    "text": "Angular",
+    "image": "angular-icon"
+  },
+  {
+    "x": 2,
+    "y": 0,
+    "text": "NodeJs",
+    "image": "nodejs"
+  },
+  {
+    "x": -1,
+    "y": -1,
+    "text": "Git",
+    "image": "git"
+  },
+  {
+    "x": 1,
+    "y": -1,
+    "text": "Gitlab/Gitlab CI",
+    "image": "gitlab"
+  },
+  {
+    "x": 2,
+    "y": -2,
+    "text": "Docker",
+    "image": "docker"
+  },
+  {
+    "x": 1,
+    "y": 1,
+    "text": "ES6/ES7",
+    "image": "es6"
+  },
+  {
+    "x": -3,
+    "y": 1,
+    "text": "HTML5",
+    "image": "html5"
+  },
+  {
+    "x": -1,
+    "y": 1,
+    "text": "CSS3",
+    "image": "css3"
+  },
+  {
+    "x": 0,
+    "y": 2,
+    "text": "Sass",
+    "image": "sass"
+  },
+  {
+    "x": 2,
+    "y": 2,
+    "text": "Eslint",
+    "image": "eslint"
+  },
+  {
+    "x": -4,
+    "y": 0,
+    "text": "Typescript",
+    "image": "typescript"
+  },
+  {
+    "x": 4,
+    "y": 0,
+    "text": "Reactivex",
+    "image": "reactivex"
+  },
+  {
+    "x": -2,
+    "y": 2,
+    "text": "D3js",
+    "image": "d3js"
+  },
+  {
+    "x": -4,
+    "y": 2,
+    "text": "Front-End Tests",
+    "image": "jasmine"
+  },
+  {
+    "x": -5,
+    "y": 1,
+    "text": "NPM",
+    "image": "npm"
+  },
+  {
+    "x": -3,
+    "y": -1,
+    "text": "Webpack",
+    "image": "webpack"
+  },
+  {
+    "x": 6,
+    "y": 0,
+    "text": "Open Source",
+    "image": "opensource"
+  },
+  {
+    "x": 3,
+    "y": 1,
+    "text": "Nginx",
+    "image": "nginx"
+  },
+  {
+    "x": 5,
+    "y": 1,
+    "text": "OAuth",
+    "image": "oauth"
+  },
+  {
+    "x": 3,
+    "y": -1,
+    "text": "SQL",
+    "image": "postgresql"
+  },
+  {
+    "x": 5,
+    "y": -1,
+    "text": "Scala",
+    "image": "scala"
+  },
+  {
+    "x": 7,
+    "y": -1,
+    "text": "Spark",
+    "image": "spark"
+  },
+  {
+    "x": 6,
+    "y": -2,
+    "text": "Hadoop",
+    "image": "hadoop"
+  },
+  {
+    "x": -1,
+    "y": 3,
+    "text": "SVG",
+    "image": "svg"
+  },
+  {
+    "x": 4,
+    "y": 2,
+    "text": "Ionic",
+    "image": "ionic"
+  },
+  {
+    "x": -7,
+    "y": -1,
+    "text": "Python",
+    "image": "python"
+  },
+  {
+    "x": -6,
+    "y": -2,
+    "text": "Java",
+    "image": "java"
+  },
+  {
+    "x": -4,
+    "y": -2,
+    "text": "Spring",
+    "image": "spring"
+  }
+]

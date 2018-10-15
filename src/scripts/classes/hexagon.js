@@ -1,7 +1,13 @@
 'use strict';
 import * as THREE from 'three';
 import HexagonService from '../services/hexagon';
+import HexagonfaceClass from './hexagonface';
+import TransitionService from '../services/transition';
 import { HEXAGON_RADIUS, HEXAGON_WIDTH, HEXAGON_HEIGHT } from '../constants';
+
+import * as svgMesh3d from 'svg-mesh-3d';
+import * as simplicialComplex from 'three-simplicial-complex';
+const createGeomFrom3dMesh = simplicialComplex(THREE);
 
 export default class {
 
@@ -49,42 +55,39 @@ export default class {
     const sideMaterial = new THREE.MeshPhongMaterial({
       color: 0xDDDDDD
     });
-    const faceMaterial = new THREE.MeshPhongMaterial({
-      color: 0x444444
-    });
-    const backMaterial = new THREE.MeshPhongMaterial({
-      color: 0x444444
+    const material = new THREE.MeshPhongMaterial({
+      color: 0xF5F5F5
     });
 
-    let xPos = x * HEXAGON_WIDTH / 2;
-    let yPos = y * HEXAGON_RADIUS * 1.5;
+    let xPos = x * HEXAGON_WIDTH * 1.012 / 2;
+    let yPos = y * HEXAGON_RADIUS * 1.012 * 1.5;
 
     this.cylinder = new THREE.Mesh(cylinderGeo, sideMaterial);
     this.cylinder.name = 'Side';
-    this.faceCap = new THREE.Mesh(capGeo, faceMaterial);
-    this.faceCap.name = 'Face';
-    this.faceCap.position.y = depth / 2;
-    this.faceCap.rotation.x = Math.PI;
-    this.backCap = new THREE.Mesh(capGeo, backMaterial);
-    this.backCap.name = 'Back';
-    this.backCap.position.y = - depth / 2;
+    this.faceCap = new HexagonfaceClass(capGeo, material.clone(), depth, 'Face', this);
+    this.backCap = new HexagonfaceClass(capGeo, material.clone(), depth, 'Back', this);
 
     this.mesh = new THREE.Object3D();
-    this.mesh.rotation.set(Math.PI / 2, 0, 0);
+    this.cylinder.rotation.set(Math.PI / 2, 0, 0);
 
-    this.mesh.add(this.cylinder, this.faceCap, this.backCap);
+    this.mesh.add(this.cylinder, this.faceCap.wrapper, this.backCap.wrapper);
 
     this.container = new THREE.Object3D();
     this.animator = new THREE.Object3D();
+    this.wrapper = new THREE.Object3D();
     this.container.position.set( xPos, yPos, 0 );
 
     const lvalue = (Math.abs(x) + Math.abs(y));
 
-    this.faceCap.material.color = new THREE.Color().setHSL(0, 0, Math.max(1 - lvalue / 150, 0));
+    this.faceCap.mesh.material.color = new THREE.Color().setHSL(0, 0, Math.max(1 - lvalue / 150, 0));
 
-    this.animator.add(this.mesh);
+    this.wrapper.add(this.mesh);
+    this.animator.add(this.wrapper);
     this.container.add(this.animator);
-    this.mesh.class = this;
+
+    this.cylinder.hexagon = this;
+    this.faceCap.mesh.hexagon = this;
+    this.backCap.mesh.hexagon = this;
 
     scene.add( this.container );
   }

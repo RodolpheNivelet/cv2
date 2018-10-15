@@ -12,6 +12,7 @@
   "author": "Rodolphe Nivelet <rodolphe.nivelet@gmail.com>",
   "license": "ISC",
   "devDependencies": {
+    "copy-webpack-plugin": "^4.5.1",
     "file-loader": "^1.1.6",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^2.30.1",
@@ -19,7 +20,11 @@
     "webpack-dev-server": "^2.11.1"
   },
   "dependencies": {
+    "@fortawesome/fontawesome": "^1.1.3",
+    "@fortawesome/fontawesome-pro-light": "^5.0.6",
     "stats.js": "^0.17.0",
-    "three": "^0.89.0"
+    "svg-mesh-3d": "^1.1.0",
+    "three": "^0.89.0",
+    "three-simplicial-complex": "^69.0.6"
   }
 }

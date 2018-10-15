@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import * as Stats from 'stats.js';
 import HexagonService from './services/hexagon.js';
 
+
 import { HEXAGON_RADIUS, HEXAGON_WIDTH, HEXAGON_HEIGHT } from './constants';
 
 export class App {
@@ -49,7 +50,7 @@ export class App {
       HexagonService.randomAnimation(hex);
     });
 
-		this.canvas.addEventListener( 'mousedown', event => {self.onClick(event);}, false );
+    this.canvas.addEventListener( 'mousedown', event => {self.onClick(event);}, false );
 
   }
 
@@ -62,6 +63,17 @@ export class App {
 
     const target = HexagonService.targetedHexagon(this.raycaster, this.scene);
     if (target) {
+      target.hover = true;
+      this.canvas.style.cursor = target.clickable ? 'pointer' : 'default';
+    }
+    for (var i = 0; i < HexagonService.hexagons.length; i++) {
+      const hexagon = HexagonService.hexagons[i]
+      if (hexagon.faceCap !== target) {
+        hexagon.faceCap.hover = false;
+      }
+      if (hexagon.backCap !== target) {
+        hexagon.backCap.hover = false;
+      }
     }
 
     HexagonService.playAnimation(delta);
@@ -90,7 +102,7 @@ export class App {
     this.renderedSize();
     this.cameraSize();
     this.camera.updateProjectionMatrix();
-  };
+  }
 
   onDocumentMouseMove(event) {
     this.mouse.x = ( event.clientX / window.innerWidth * 2 ) - 1;
@@ -100,8 +112,7 @@ export class App {
   onClick(event) {
     const target = HexagonService.targetedHexagon(this.raycaster, this.scene);
     if (target) {
-      HexagonService.animateAllFrom(target, 200, this.flipped ? 'FlipBack': 'Flip', true);
-      this.flipped = !this.flipped;
+      HexagonService.clicked(target);
     }
   }
 }

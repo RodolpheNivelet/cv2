@@ -1,0 +1,14 @@
+language: node_js
+node_js: node
+branches:
+  only: master
+before_install: npm config set @fortawesome:registry https://npm.fontawesome.com/$FONTAWESOME_TOKEN
+script: npm run build
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  keep-history: true
+  repo: RodolpheNivelet/rodolphenivelet.github.io
+  local-dir: dist
+  target-branch: master
