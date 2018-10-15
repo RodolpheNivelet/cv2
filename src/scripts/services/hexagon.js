@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import Hexagon from '../classes/hexagon';
 import PageService from './pages';
+
 import { HEXAGON_RADIUS } from '../constants';
 
 import { faBriefcase, faChess, faChild, faRoad, faArrowAltLeft } from '@fortawesome/fontawesome-pro-light';
@@ -9,8 +10,6 @@ import { faBriefcase, faChess, faChild, faRoad, faArrowAltLeft } from '@fortawes
 class HexagonService {
 
   constructor() {
-
-    this.currentPage = 'home';
 
     this.hexagons = [];
 
@@ -159,21 +158,8 @@ class HexagonService {
 
   clicked(target) {
     if (target.link) {
-      this.changePage(target);
+      PageService.changePage(target);
     }
-  }
-
-  changePage(target) {
-    this.currentPage = target.link;
-
-    if (target.link !== 'home') {
-      PageService.loadPage(target.link);
-    }
-
-    const afterAnim = target.link === 'home' ? hex => {hex.cleanBack()} : undefined;
-
-    this.animateAllFrom(target.hexagon, 200, this.flipped ? 'FlipBack': 'Flip', true, afterAnim);
-    this.flipped = !this.flipped;
   }
 
   textureBlocks() {

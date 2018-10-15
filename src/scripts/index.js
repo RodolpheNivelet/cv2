@@ -1,8 +1,8 @@
 'use strict';
 import * as THREE from 'three';
 import * as Stats from 'stats.js';
+import TextService from './services/text.js';
 import HexagonService from './services/hexagon.js';
-
 
 import { HEXAGON_RADIUS, HEXAGON_WIDTH, HEXAGON_HEIGHT } from './constants';
 
@@ -23,7 +23,7 @@ export class App {
     this.clock = new THREE.Clock();
 
     this.scene = new THREE.Scene();
-    this.scene.fog = new THREE.Fog( 0xaaaaaa, 150, 300 );
+    this.scene.fog = new THREE.Fog( 0xaaaaaa, 100, 130 );
 
     this.renderer = new THREE.WebGLRenderer();
     this.renderer.setClearColor( 0xaaaaaa );
@@ -43,6 +43,20 @@ export class App {
 
     this.scene.add( this.ambientLight );
 
+    this.textMesh = TextService.getMesh('"Most of a good program is done on paper, the rest is formality"', true, 80, 8, 80);
+    this.textMesh.position.set(0, -20, 6);
+    this.textMesh.material.transparent = true;
+    this.textMesh.material.opacity = 0;
+    this.textMesh.animations = [
+      new THREE.AnimationClip('FadeIn', 1, [new THREE.VectorKeyframeTrack( '.opacity', [0, 1], [0, 1], THREE.InterpolateSmooth )]),
+      new THREE.AnimationClip('FadeOut', 1, [new THREE.VectorKeyframeTrack( '.opacity', [0, 1], [1, 0], THREE.InterpolateSmooth )])
+    ];
+    this.textMesh.mixer = new THREE.AnimationMixer(this.textMesh.material);
+    this.textMesh.clipAction = this.textMesh.mixer.clipAction(THREE.AnimationClip.findByName(this.textMesh.animations, 'FadeIn'));
+    this.textMesh.clipAction.setLoop(THREE.LoopOnce);
+    this.textMesh.clipAction.clampWhenFinished = true;
+    this.scene.add(this.textMesh);
+
     HexagonService.appendGrid(30, 10, this.scene);
 
     const middleHex = HexagonService.get(0, 0);
@@ -53,6 +67,9 @@ export class App {
       HexagonService.animateAllFrom(middleHex, 200, 'Bounce', false, hex => {
         HexagonService.randomAnimation(hex);
       });
+      setTimeout(() => {
+        this.textMesh.clipAction.play();
+      }, 4000);
     }, 1000);
 
   }
@@ -80,6 +97,7 @@ export class App {
     }
 
     HexagonService.playAnimation(delta);
+    this.textMesh.mixer.update(delta);
 
 		this.camera.position.x += ( this.mouse.x * 30 - this.camera.position.x ) * 0.05;
 		this.camera.position.y += ( this.mouse.y * 30 - this.camera.position.y ) * 0.05;

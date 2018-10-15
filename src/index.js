@@ -1,4 +1,4 @@
 'use strict';
 import { App } from './scripts';
 
-new App();
+export default new App();

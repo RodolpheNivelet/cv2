@@ -1,6 +1,7 @@
 'use strict';
 import * as THREE from 'three';
 import HexagonService from '../services/hexagon';
+import TextService from '../services/text';
 import TransitionService from '../services/transition';
 import { HEXAGON_RADIUS, HEXAGON_WIDTH, HEXAGON_HEIGHT } from '../constants';
 
@@ -78,32 +79,7 @@ export default class {
 
   addText(text, black) {
 
-    const canvas = document.createElement('canvas');
-    canvas.height = 128;
-    canvas.width = 512;
-    const canvasctx = canvas.getContext( '2d' );
-
-    canvasctx.font = '50px Arial';
-    canvasctx.textAlign = 'center';
-    canvasctx.textBaseline = 'middle';
-    if (black) {
-      canvasctx.fillStyle = '#444';
-    } else {
-      canvasctx.fillStyle = '#FFF';
-      canvasctx.lineWidth = 2;
-      canvasctx.strokeStyle = '#DDD';
-    }
-    canvasctx.fillText(text, canvas.width/2, canvas.height/2);
-    canvasctx.strokeText(text, canvas.width/2, canvas.height/2);
-
-    const texture = new THREE.Texture(canvas);
-    const geometry = new THREE.PlaneGeometry(10, 2.5);
-    const material = new THREE.MeshBasicMaterial({
-      transparent: true,
-      map: texture
-    });
-		material.map.needsUpdate = true;
-    this.text = new THREE.Mesh(geometry, material);
+    this.text = TextService.getMesh(text, black, 10, 2);
 
     this.wrapper.add(this.text);
 

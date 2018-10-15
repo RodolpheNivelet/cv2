@@ -1,7 +1,12 @@
 import * as THREE from 'three';
 import HexagonService from './hexagon';
+import App from '../../';
 
 class PageService {
+
+  constructor() {
+    this.currentPage = 'home';
+  }
 
   loadPage(page) {
     if (page) {
@@ -33,6 +38,37 @@ class PageService {
       	}
       );
     }
+  }
+
+  changePage(target) {
+    this.currentPage = target.link;
+
+    if (target.link !== 'home') {
+      this.loadPage(target.link);
+    }
+
+    const afterAnim = target.link === 'home' ? hex => {hex.cleanBack()} : undefined;
+
+    HexagonService.animateAllFrom(target.hexagon, 200, HexagonService.flipped ? 'FlipBack': 'Flip', true, afterAnim);
+    HexagonService.flipped = !HexagonService.flipped;
+
+    const textMesh = App.textMesh;
+    let animationName;
+    let delay;
+    if (target.link === 'home') {
+      animationName = 'FadeIn';
+      delay = 3000;
+    } else {
+      animationName = 'FadeOut';
+      delay = 1;
+    }
+    setTimeout(() => {
+      textMesh.clipAction.stop();
+      textMesh.clipAction = textMesh.mixer.clipAction(THREE.AnimationClip.findByName(textMesh.animations, animationName));
+      textMesh.clipAction.setLoop(THREE.LoopOnce);
+      textMesh.clipAction.clampWhenFinished = true;
+      textMesh.clipAction.play();
+    }, delay);
   }
 
 }
